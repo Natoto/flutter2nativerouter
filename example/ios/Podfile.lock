@@ -1,0 +1,36 @@
+PODS:
+  - athrouter (0.2.4)
+  - FDFullscreenPopGesture (1.1)
+  - Flutter (1.0.0)
+  - flutter2nativerouter (0.0.1):
+    - athrouter
+    - FDFullscreenPopGesture
+    - Flutter
+
+DEPENDENCIES:
+  - athrouter (= 0.2.4)
+  - FDFullscreenPopGesture (= 1.1)
+  - Flutter (from `.symlinks/flutter/ios`)
+  - flutter2nativerouter (from `.symlinks/plugins/flutter2nativerouter/ios`)
+
+SPEC REPOS:
+  https://git.yy.com/midwares/modular/athservicespecs-ios.git:
+    - athrouter
+  https://github.com/cocoapods/specs.git:
+    - FDFullscreenPopGesture
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: ".symlinks/flutter/ios"
+  flutter2nativerouter:
+    :path: ".symlinks/plugins/flutter2nativerouter/ios"
+
+SPEC CHECKSUMS:
+  athrouter: 7cd776cd929a0d94f6a3b429545f5268b75fc275
+  FDFullscreenPopGesture: a8a620179e3d9c40e8e00256dcee1c1a27c6d0f0
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter2nativerouter: 7a3bd8068a018e44a719c97e3204cc7bf61e9652
+
+PODFILE CHECKSUM: e65e377a770b7d4735a8d5b45e75856cf91804ed
+
+COCOAPODS: 1.7.1
