@@ -10,10 +10,12 @@
 #import "F2NFlutterViewController.h"
 #import "Flutter2nativerouterPlugin.h"
 #import <objc/runtime.h>
-#import <OpenGLES/ES2/gl.h>
+#import <OpenGLES/ES1/gl.h>
+#import <OpenGLES/ES1/glext.h>
 //#import "YynativehelperPlugin.h"
 
 static int kGroupPageIdx = 0;
+static __weak YYFlutterViewContainer *lastFlutterCtr = nil;
 
 @interface Flutter2nativerouterPlugin (helper)
 + (void)pushPageWithName:(NSString *)routeName uniqidx:(int)idx;
@@ -26,22 +28,55 @@ static int kGroupPageIdx = 0;
 @property (nonatomic, strong) NSString *routeName;
 //@property (nonatomic, assign) BOOL isloadflutter;
 @property (nonatomic, assign) int groupidx;
+//@property (nonatomic, assign) BOOL needUpdateScreenShot;
+@property (nonatomic, assign) BOOL haveloadflutter;
 @end
 
 @implementation UIViewController (snap)
+
++ (UIImage *)takeSnapshot {
+    GLint bufferWidth = 0;
+    GLint bufferHeight = 0;
+
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &bufferWidth);
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &bufferHeight);
+
+    int width = bufferWidth;
+    int height = bufferHeight;
+    int length = width * height * 4;
+    void *data = (void *)malloc(length * sizeof(GLubyte));
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 4);
+    glReadPixels(0, 0, bufferWidth, bufferHeight, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    CGDataProviderRef dataProvider = CGDataProviderCreateWithData(nil, data, length, nil);
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGImageRef image = CGImageCreate(width, height, 8, 32, width * 4, colorspace, kCGBitmapByteOrderDefault, dataProvider, nil, YES, kCGRenderingIntentDefault);
+
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(width, height), false, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetBlendMode(context, kCGBlendModeCopy);
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), image);
+    UIImage *renderedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    free(data);
+    return renderedImage;
+}
 
 - (UIImage *)f2n_screenShots:(UIView *)view1
 {
     //截取整个backview
     UIView *view = view1;
-    //[view1 snapshotViewAfterScreenUpdates:YES];
     UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0);
-//    UIGraphicsBeginImageContext(view.bounds.size);
     [view.layer performSelectorOnMainThread:@selector(renderInContext:) withObject:(id)UIGraphicsGetCurrentContext() waitUntilDone:YES];
     UIImage *sourceImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-
     return sourceImage;
+//    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, [UIScreen mainScreen].scale);
+//    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    return image;
 }
 
 @end
@@ -72,7 +107,14 @@ static int kGroupPageIdx = 0;
     YYFlutterViewContainer *ctr = [YYFlutterViewContainer new];
     ctr.routeName = routeName;
     ctr.groupidx = kGroupPageIdx++;
-    [Flutter2nativerouterPlugin pushPageWithName:routeName uniqidx:ctr.groupidx];
+    if (lastFlutterCtr) {
+         UIImage *image =  [lastFlutterCtr f2n_screenShots:lastFlutterCtr.view];
+         lastFlutterCtr.snapImageView.image = image;
+    }
+    lastFlutterCtr = ctr;
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+      [Flutter2nativerouterPlugin pushPageWithName:ctr.routeName uniqidx:ctr.groupidx];
+//    });
     return ctr;
 }
 
@@ -130,7 +172,7 @@ static int kGroupPageIdx = 0;
 @end
 
 #pragma mark - YYFlutterViewContainer
-static UINavigationController * curnavigationctr;
+static UINavigationController *curnavigationctr;
 @implementation YYFlutterViewContainer
 
 - (F2NFlutterViewController *)fluttervc
@@ -145,17 +187,15 @@ static UINavigationController * curnavigationctr;
 
 - (void)detachFlutterView
 {
-    [self.view bringSubviewToFront:self.snapImageView];
+//    [self.view bringSubviewToFront:self.snapImageView];
     MOSFlutterEngine.sharedInstance.myEngine.viewController = nil;
 }
 
 - (void)attachFlutterView
 {
     F2NFlutterViewController *ctr = self.fluttervc;
-    MOSFlutterEngine.sharedInstance.myEngine.viewController = ctr;
-
-//    [ctr surfaceUpdated:YES];
-
+    MOSFlutterEngine.sharedInstance.myEngine.viewController = ctr; 
+//    [ctr surfaceUpdated:YES];     
     if (![self.childViewControllers containsObject:ctr]) {
         [self addChildViewController:ctr];
         ctr.view.frame = self.view.bounds;
@@ -167,7 +207,6 @@ static UINavigationController * curnavigationctr;
 {
     curnavigationctr = self.navigationController;
     [self snapImageView];
-    [self attachFlutterView];
     self.view.backgroundColor = [UIColor colorWithRed:0x16 / 255.0 green:0x17 / 255.0  blue:0x18 / 255.0  alpha:0];
 #if DEBUG
     self.view.backgroundColor = [UIColor redColor];
@@ -197,34 +236,29 @@ static UINavigationController * curnavigationctr;
     [super viewWillAppear:animated];
     [self attachFlutterView];
 //    self.snapImageView.frame = CGRectMake(100, 100, 100, 100);
-    [self.view bringSubviewToFront:self.snapImageView];
-    NSLog(@"%s", __func__);
-//    [MOSFlutterEngine.sharedInstance.myEngine.lifecycleChannel sendMessage:@"AppLifecycleState.inactive"];
+//    if (self.haveloadflutter) {
+        [self.view bringSubviewToFront:self.snapImageView];             
+//        self.haveloadflutter = YES;
+//    } 
+    NSLog(@"%s", __func__); 
 }
 
 - (void)viewDidAppear:(BOOL)animated
-{
-//    MOSFlutterEngine.sharedInstance.myEngine.viewController = nil;
-    [super viewDidAppear:animated];
-    UIApplication.sharedApplication.keyWindow.userInteractionEnabled = NO;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UIApplication.sharedApplication.keyWindow.userInteractionEnabled = YES;
-        UIImage *image =  [self f2n_screenShots:self.view];
-        self.snapImageView.image = image;
-        self.snapImageView.backgroundColor = [UIColor blueColor];
-        [self.view sendSubviewToBack:self.snapImageView];
-//        [MOSFlutterEngine.sharedInstance.myEngine.lifecycleChannel  sendMessage:@"AppLifecycleState.resumed"];
-    });
+{ 
+    [super viewDidAppear:animated]; 
     NSLog(@"%s", __func__);
     [Flutter2nativerouterPlugin routerPluginEventHandel].eventsBlock([Flutter2nativerouterPlugin createHandleMap:@"updategroupidx" value:self.routeName groupidx:self.groupidx]);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.view sendSubviewToBack:self.snapImageView];     
+    });
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
-{
-    //[self f2n_screenShots:self.fluttervc.view];
-    [super viewWillDisappear:animated];
+{ 
+  [self detachFlutterView];
+  [super viewWillDisappear:animated];
     NSLog(@"%s", __func__);
-    [self detachFlutterView]; 
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -239,6 +273,9 @@ static UINavigationController * curnavigationctr;
         [self.view addSubview:_snapImageView];
         [self.view sendSubviewToBack:_snapImageView];
         _snapImageView.frame = self.view.bounds;
+        #if DEBUG
+//        _snapImageView.backgroundColor = [UIColor yellowColor];
+        #endif
     }
     return _snapImageView;
 }
@@ -290,11 +327,7 @@ static UINavigationController * curnavigationctr;
 
 - (void)setInitialRoute:(NSString *)route
 {
-    [super setInitialRoute:route];
-//    MOSFlutterEngine.sharedInstance.defaultRouteName = route;
-//    if (MOSFlutterEngine.sharedInstance.eventsBlock) {
-//        MOSFlutterEngine.sharedInstance.eventsBlock([NSString stringWithFormat:@"刷新页面吧_%@", route]);
-//    }
+    [super setInitialRoute:route]; 
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
@@ -336,6 +369,7 @@ static UINavigationController * curnavigationctr;
 
 @end
 
+/*
 #pragma mark - pop dismiss
 
 @implementation UINavigationController (flutter2native)
@@ -437,3 +471,4 @@ static UINavigationController * curnavigationctr;
 }
 
 @end
+*/
