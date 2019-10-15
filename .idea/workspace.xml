@@ -2,21 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6468b0e1-37a0-4c44-8b7e-fbf1575d87d3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/example/ios/Runner/ATHURIRouter+Flutter.m" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/example/ios/Runner/ATHURIRouter+Flutter.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/example/lib/Page1.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/example/lib/Page1.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/example/lib/Page2.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/example/lib/Page2.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/flutter2nativerouter.iml" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/flutter2nativerouter.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/ios/Classes/F2NFlutterViewController.m" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/ios/Classes/F2NFlutterViewController.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/ios/Classes/Flutter2nativerouterPlugin.m" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/ios/Classes/Flutter2nativerouterPlugin.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/lib/flutter2nativerouter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter2nativerouter/lib/flutter2nativerouter.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/Runner/ATHURIRouter+Flutter.m" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Runner/ATHURIRouter+Flutter.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/Page1.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/Page1.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/Page2.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/Page2.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flutter2nativerouter.iml" beforeDir="false" afterPath="$PROJECT_DIR$/flutter2nativerouter.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ios/Classes/F2NFlutterViewController.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/F2NFlutterViewController.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ios/Classes/Flutter2nativerouterPlugin.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/Flutter2nativerouterPlugin.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/flutter2nativerouter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flutter2nativerouter.dart" afterDir="false" />
@@ -43,8 +28,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/flutter2nativerouter.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="256" column="45" lean-forward="true" selection-start-line="256" selection-start-column="45" selection-end-line="256" selection-end-column="45" />
+            <state relative-caret-position="79">
+              <caret line="102" column="19" lean-forward="true" selection-start-line="102" selection-start-column="19" selection-end-line="102" selection-end-column="19" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -55,8 +40,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="276">
-              <caret line="101" column="36" selection-start-line="101" selection-start-column="36" selection-end-line="101" selection-end-column="36" />
+            <state relative-caret-position="206">
+              <caret line="26" column="40" selection-start-line="26" selection-start-column="40" selection-end-line="26" selection-end-column="40" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -67,8 +52,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/example/lib/Page1.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="51" column="55" selection-start-line="51" selection-start-column="55" selection-end-line="51" selection-end-column="55" />
+            <state relative-caret-position="167">
+              <caret line="60" column="32" selection-start-line="60" selection-start-column="32" selection-end-line="60" selection-end-column="32" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
               </folding>
@@ -96,10 +81,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pageidxgroups[curgroupidx]</find>
-      <find>updateContext</find>
-      <find>onUDBLoginAction4Action</find>
-      <find>curgroupidx --</find>
       <find>pageidxgroups[curgroupidx] = 0;</find>
       <find>flutter_closeflutter</find>
       <find>pop...</find>
@@ -123,9 +104,13 @@
       <find>pushNamed</find>
       <find>openFlutterURI</find>
       <find>flutter_openflutter</find>
-      <find>nativeOpenFlutterURI</find>
-      <find>closeFlutterURI</find>
       <find>didcloseFlutterURI</find>
+      <find>native_closenative</find>
+      <find>closeFlutterURI</find>
+      <find>groupCanPop</find>
+      <find>contextMap</find>
+      <find>pageidxgroups</find>
+      <find>nativeOpenFlutterURI</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -295,26 +280,6 @@
     <entry file="file://$PROJECT_DIR$/../../../../../../flutter/packages/flutter/lib/src/widgets/navigator.dart" />
     <entry file="file://$PROJECT_DIR$/../../../../../../flutter/packages/flutter/lib/src/widgets/pages.dart" />
     <entry file="file://$PROJECT_DIR$/../../../../../../flutter/packages/flutter/lib/src/widgets/routes.dart" />
-    <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="101" column="36" selection-start-line="101" selection-start-column="36" selection-end-line="101" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/example/lib/Page1.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="51" column="55" selection-start-line="51" selection-start-column="55" selection-end-line="51" selection-end-column="55" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/example/lib/Page2.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="565">
@@ -322,10 +287,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/example/lib/Page1.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="60" column="32" selection-start-line="60" selection-start-column="32" selection-end-line="60" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="26" column="40" selection-start-line="26" selection-start-column="40" selection-end-line="26" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/flutter2nativerouter.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="256" column="45" lean-forward="true" selection-start-line="256" selection-start-column="45" selection-end-line="256" selection-end-column="45" />
+        <state relative-caret-position="79">
+          <caret line="102" column="19" lean-forward="true" selection-start-line="102" selection-start-column="19" selection-end-line="102" selection-end-column="19" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>

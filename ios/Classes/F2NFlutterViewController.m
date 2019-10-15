@@ -29,7 +29,7 @@ static __weak YYFlutterViewContainer *lastFlutterCtr = nil;
 @property (nonatomic, strong) UIImageView *snapImageView;
 @property (nonatomic, strong) NSString *routeName;
 //@property (nonatomic, assign) BOOL isloadflutter;
-@property (nonatomic, assign) int groupidx; 
+@property (nonatomic, assign) int groupidx;
 @property (nonatomic, assign) BOOL canUpdateSnapshot;
 @end
 
@@ -66,13 +66,13 @@ static __weak YYFlutterViewContainer *lastFlutterCtr = nil;
 }*/
 
 - (UIImage *)f2n_screenShots:(UIView *)view1
-{ 
+{
     UIView *view = view1;
     UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0);
     [view.layer performSelectorOnMainThread:@selector(renderInContext:) withObject:(id)UIGraphicsGetCurrentContext() waitUntilDone:YES];
     UIImage *sourceImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    return sourceImage; 
+    return sourceImage;
 }
 
 @end
@@ -103,12 +103,12 @@ static __weak YYFlutterViewContainer *lastFlutterCtr = nil;
     YYFlutterViewContainer *ctr = [YYFlutterViewContainer new];
     ctr.routeName = routeName;
     ctr.groupidx = kGroupPageIdx++;
-    if (lastFlutterCtr && lastFlutterCtr.canUpdateSnapshot) { 
-         UIImage *image =  [lastFlutterCtr f2n_screenShots:lastFlutterCtr.view];
-         lastFlutterCtr.snapImageView.image = image;
+    if (lastFlutterCtr && lastFlutterCtr.canUpdateSnapshot) {
+        UIImage *image =  [lastFlutterCtr f2n_screenShots:lastFlutterCtr.view];
+        lastFlutterCtr.snapImageView.image = image;
     }
-    lastFlutterCtr = ctr; 
-    [Flutter2nativerouterPlugin pushPageWithName:ctr.routeName uniqidx:ctr.groupidx]; 
+    lastFlutterCtr = ctr;
+    [Flutter2nativerouterPlugin pushPageWithName:ctr.routeName uniqidx:ctr.groupidx];
     return ctr;
 }
 
@@ -118,7 +118,7 @@ static __weak YYFlutterViewContainer *lastFlutterCtr = nil;
         [_engine runWithEntrypoint:nil];
         F2NFlutterViewController *flutterViewController = [[F2NFlutterViewController alloc] initWithEngine:MOSFlutterEngine.sharedInstance.engine nibName:nil bundle:nil];
         [MOSFlutterEngine.sharedInstance registerPlugins:flutterViewController];
-        _flutterViewController = flutterViewController; 
+        _flutterViewController = flutterViewController;
     }
     return _flutterViewController;
 }
@@ -184,8 +184,8 @@ static UINavigationController *curnavigationctr;
 - (void)attachFlutterView
 {
     F2NFlutterViewController *ctr = self.fluttervc;
-    MOSFlutterEngine.sharedInstance.myEngine.viewController = ctr; 
-//    [ctr surfaceUpdated:YES];     
+    MOSFlutterEngine.sharedInstance.myEngine.viewController = ctr;
+//    [ctr surfaceUpdated:YES];
     if (![self.childViewControllers containsObject:ctr]) {
         [self addChildViewController:ctr];
         ctr.view.frame = self.view.bounds;
@@ -226,28 +226,27 @@ static UINavigationController *curnavigationctr;
     [super viewWillAppear:animated];
     [self attachFlutterView];
     #if SHOWDEBUG
-    self.snapImageView.frame = CGRectMake(100, 100, 100, 100); 
+    self.snapImageView.frame = CGRectMake(100, 100, 100, 100);
     #endif
-    [self.view bringSubviewToFront:self.snapImageView];        
-    NSLog(@"%s", __func__); 
+    [self.view bringSubviewToFront:self.snapImageView];
+    NSLog(@"%s", __func__);
 }
 
 - (void)viewDidAppear:(BOOL)animated
-{ 
-    [super viewDidAppear:animated]; 
+{
+    [super viewDidAppear:animated];
     NSLog(@"%s", __func__);
     self.canUpdateSnapshot = YES;
 //    [Flutter2nativerouterPlugin routerPluginEventHandel].eventsBlock([Flutter2nativerouterPlugin createHandleMap:@"updategroupidx" value:self.routeName groupidx:self.groupidx]);
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view sendSubviewToBack:self.snapImageView];     
+        [self.view sendSubviewToBack:self.snapImageView];
     });
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated
-{ 
-  [self detachFlutterView];
-  [super viewWillDisappear:animated];
+{
+    [self detachFlutterView];
+    [super viewWillDisappear:animated];
     NSLog(@"%s", __func__);
 }
 
@@ -318,7 +317,7 @@ static UINavigationController *curnavigationctr;
 
 - (void)setInitialRoute:(NSString *)route
 {
-    [super setInitialRoute:route]; 
+    [super setInitialRoute:route];
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
@@ -359,107 +358,3 @@ static UINavigationController *curnavigationctr;
 }
 
 @end
-
-/*
-#pragma mark - pop dismiss
-
-@implementation UINavigationController (flutter2native)
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-//        [self swizzleSelector:@selector(popViewControllerAnimated:) withAnotherSelector:@selector(f2n_popViewControllerAnimated:)];
-//        [self swizzleSelector:@selector(pushViewController:animated:) withAnotherSelector:@selector(f2n_pushViewController:animated:)];
-    });
-}
-
-+ (void)swizzleSelector:(SEL)originalSelector withAnotherSelector:(SEL)swizzledSelector
-{
-    Class aClass = [self class];
-
-    Method originalMethod = class_getInstanceMethod(aClass, originalSelector);
-    Method swizzledMethod = class_getInstanceMethod(aClass, swizzledSelector);
-
-    BOOL didAddMethod =
-        class_addMethod(aClass,
-                        originalSelector,
-                        method_getImplementation(swizzledMethod),
-                        method_getTypeEncoding(swizzledMethod));
-
-    if (didAddMethod) {
-        class_replaceMethod(aClass,
-                            swizzledSelector,
-                            method_getImplementation(originalMethod),
-                            method_getTypeEncoding(originalMethod));
-    } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
-    }
-}
-
-#pragma mark - Method Swizzling
-- (void)f2n_pushViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-    BOOL isflutterview = NO;
-    if ([viewController isKindOfClass:[YYFlutterViewContainer class]]) {
-        YYFlutterViewContainer *ctr = (YYFlutterViewContainer *)viewController;
-        if ([Flutter2nativerouterPlugin routerPluginEventHandel].eventsBlock) {
-//            animated = NO;
-            isflutterview = YES;
-        }
-    }
-    [self f2n_pushViewController:viewController animated:animated];
-}
-
-- (UIViewController *)f2n_popViewControllerAnimated:(BOOL)animated
-{
-    BOOL isflutterview = NO;
-    if ([self.topViewController isKindOfClass:[YYFlutterViewContainer class]]) {
-        YYFlutterViewContainer *ctr = (YYFlutterViewContainer *)self.topViewController;
-        BOOL isForceClose = ctr.isForceClose;
-        if (!isForceClose && [Flutter2nativerouterPlugin routerPluginEventHandel].eventsBlock) {
-//            animated = NO;
-            isflutterview = YES;
-        }
-    }
-    if (isflutterview) {
-        if ([Flutter2nativerouterPlugin routerPluginEventHandel].eventsBlock) {
-//            [Flutter2nativerouterPlugin routerPluginEventHandel].eventsBlock([Flutter2nativerouterPlugin createHandleMap:@"closeuri" value:@"popflutter"]);
-        }
-        return nil;
-    } else {
-        UIViewController *ctr = [self f2n_popViewControllerAnimated:animated];
-        return ctr;
-    }
-}
-
-@end
-
-@implementation UIViewController (flutter2native)
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [UINavigationController swizzleSelector:@selector(dismissViewControllerAnimated:completion:) withAnotherSelector:@selector(f2n_dismissViewControllerAnimated:completion:)];
-    });
-}
-
-- (void)f2n_dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion
-{
-    BOOL isflutterview = NO;
-    if ([self isKindOfClass:[YYFlutterViewContainer class]]) {
-        if ([Flutter2nativerouterPlugin routerPluginEventHandel].eventsBlock) {
-            isflutterview = YES;
-        }
-    }
-    [self f2n_dismissViewControllerAnimated:flag completion:^{
-        if (isflutterview) {
-//            [Flutter2nativerouterPlugin routerPluginEventHandel].eventsBlock([Flutter2nativerouterPlugin createHandleMap:@"closeuri" value:@"dismissflutter"]);
-        }
-        completion();
-    }];
-}
-
-@end
-*/

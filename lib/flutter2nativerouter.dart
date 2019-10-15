@@ -4,10 +4,7 @@ import 'package:flutter/services.dart';
 
 
 final Map<String,Flutter2NativePageContext> contextMap = {};
-
 final MyRouteObserver routeObserver = MyRouteObserver();
-//final MyRouteObserver<PageRoute> routeObserver = new MyRouteObserver<PageRoute>();
-//final Flutter2nativerouterWare routeware = Flutter2nativerouterWare();
 
 class Flutter2NativePageContext
 {
@@ -23,7 +20,6 @@ class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   void _sendScreenView(PageRoute<dynamic> route) {
     var screenName = route.settings.name;
     print('screenName ---> $screenName');
-    // do something with it, ie. send it to your analytics service collector
   }
 
   @override
@@ -49,7 +45,6 @@ class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   @override
   void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
 
-//    if(Flutter2nativerouter.groupCanPop()){
       super.didPop(route, previousRoute);
       print('didPop ---> ');
       if (previousRoute is PageRoute && route is PageRoute) {
@@ -90,36 +85,6 @@ class Flutter2NativerouterWidget extends StatelessWidget
   }
 }
 
-/*
-class Flutter2nativerouterWare  with RouteAware
-{
-
-//  @override
-//  void dispose() {
-//    routeObserver.unsubscribe(this);
-//    super.dispose();
-//  }
-  void didPopNext() {
-    debugPrint("didPopNext --- ${runtimeType}");
-  }
-
-  // Called when the current route has been pushed.
-  void didPush() {
-    debugPrint("didPush xxxx --- ${runtimeType}");
-  }
-
-  // Called when the current route has been popped off.
-  void didPop() {
-    debugPrint("didPop ${runtimeType}");
-  }
-
-  // Called when a new route has been pushed, and the current route is no longer visible.
-  void didPushNext() {
-    debugPrint("didPushNext ${runtimeType}");
-  }
-
-}
-*/
 
 class Flutter2nativerouter{
 
@@ -145,6 +110,9 @@ class Flutter2nativerouter{
 
   /*接受系统事件*/
   static void startReceivingBroadcasts(
+
+
+
       Function(String broadcastName, Object broadcastData) onReceiveBroadcast) {
     _broadcastCallback = onReceiveBroadcast;
     _streamSubscription = _eventChannel
@@ -167,23 +135,6 @@ class Flutter2nativerouter{
     {
       BuildContext _context = contextMap[getcontextkey(pageidxgroups[curgroupidx], curgroupidx)].context;
       _poppage(_context,true);
-//      if(pageidxgroups[curgroupidx]>0){
-//
-//        BuildContext _context = contextMap[getcontextkey(pageidxgroups[curgroupidx], curgroupidx)].context;
-//        _poppage(_context,true);
-//      }else{
-//        int idx = pageidxgroups[curgroupidx];
-//        print("当前的idx $idx groupcuridx $curgroupidx");
-//        if(pageidxgroups[curgroupidx]>=0) {
-//          pop(_context, true);
-//        }
-//        closeNativeURI({"isForceClose":1});
-//      }
-    }
-    else if(type == "dealloccloseuri")
-    {
-//      BuildContext _context = contextMap[getcontextkey(pageidxgroups[curgroupidx], curgroupidx)].context;
-//      _poppage(_context,true);
     }
     else if( type == 'openuri'){
       _broadcastCallback('openuri',value);
@@ -251,14 +202,6 @@ class Flutter2nativerouter{
       closeNativeURI(params);
   }
 
-
-  static groupCanPop() {
-
-    int pageidx = pageidxgroups[curgroupidx];
-
-    return pageidx>0;
-
-  }
 
   // 出栈
   static bool _poppage<T extends Object>(BuildContext context,[T result]) {
