@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp>  with RouteAware{
 
            Flutter2nativerouter.nativeOpenFlutterURI(_curContext, 'page1');
          }
-         else if(broadcastData == 'main'){
+         else { //if(broadcastData == 'main'){
            Flutter2nativerouter.nativeOpenFlutterMainURI(_curContext);
          }
        }

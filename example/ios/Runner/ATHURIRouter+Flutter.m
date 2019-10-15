@@ -14,43 +14,47 @@
 
 //static int flutterpageidx = 0;
 
-URIRegisterAction(UDBLoginAction2, @[@"native_openflutter"]) {
+URIRegisterAction(UDBLoginAction2, @[@"native_openflutter"]) { //OK
+    
+    NSLog(@"%s",__func__);
     NSDictionary *param = userInfo;
     UINavigationController *topViewController =  (UINavigationController *)[[UIApplication sharedApplication]delegate].window.rootViewController;
-    //param[@"uri"]
-    UIViewController *ctr = [MOSFlutterEngine.sharedInstance createFlutterContainer:@""];
-    [topViewController pushViewController:ctr animated:YES];
-//    topViewController.fd_interactivePopDisabled = YES;
-//    flutterpageidx = 0;
+    NSString * url = param[@"uri"];
+    UIViewController *ctr = [MOSFlutterEngine.sharedInstance createFlutterContainer:url];
+    [topViewController pushViewController:ctr animated:YES]; 
 }
 
-URIRegisterAction(UDBLoginAction, @[@"flutter_opennative"]) {
+#pragma mark - 以下为flutter调用的
+
+URIRegisterAction(UDBLoginAction, @[@"flutter_opennative"]) { //OK
+    
+    NSLog(@"%s",__func__);
     NSDictionary *param = userInfo;
     NSNumber *animatevalue = param[@"animated"];
     NSString *uri = param[@"AViewController"];
     BOOL animate = animatevalue ? animatevalue.boolValue : YES;
     UINavigationController *topViewController =  (UINavigationController *)[[UIApplication sharedApplication]delegate].window.rootViewController;
-    [topViewController pushViewController:[AViewController new] animated:animate];
-//    topViewController.topViewController.fd_interactivePopDisabled = YES;
+    [topViewController pushViewController:[AViewController new] animated:animate]; 
     callback(YES, nil, nil);
 }
-URIRegisterAction(UDBLoginAction3, @[@"flutter_openflutter"]) {
-    NSDictionary *param = userInfo;
-    UINavigationController *topViewController =  (UINavigationController *)[[UIApplication sharedApplication]delegate].window.rootViewController;
-//    topViewController.topViewController.fd_interactivePopDisabled = YES;
 
+URIRegisterAction(UDBLoginAction3, @[@"flutter_openflutter"]) { //OK
+    
+    NSLog(@"%s",__func__);
+    NSDictionary *param = userInfo;
+    UINavigationController *topViewController =  (UINavigationController *)[[UIApplication sharedApplication]delegate].window.rootViewController; 
     NSString *url = param[@"uri"];
     if ([url isEqualToString:@"AViewController"]) {
-        [topViewController pushViewController:[AViewController new] animated:YES];
-//        topViewController.topViewController.fd_interactivePopDisabled = NO;
+        [topViewController pushViewController:[AViewController new] animated:YES]; 
         return;
     }
-    UIViewController *ctr = [MOSFlutterEngine.sharedInstance createFlutterContainer:param[@"uri"]];
-//    ctr.fd_interactivePopDisabled = YES;
+    UIViewController *ctr = [MOSFlutterEngine.sharedInstance createFlutterContainer:param[@"uri"]]; 
     [topViewController pushViewController:ctr animated:YES];
 }
 
-URIRegisterAction(UDBLoginAction4, @[@"flutter_closenative"]) {
+URIRegisterAction(UDBLoginAction4, @[@"flutter_closenative"]) { //OK
+    
+    NSLog(@"%s",__func__);
     UINavigationController *topViewController =  (UINavigationController *)[[UIApplication sharedApplication]delegate].window.rootViewController;
     if ([topViewController.topViewController isKindOfClass:YYFlutterViewContainer.class]) {
         YYFlutterViewContainer *ctr = (YYFlutterViewContainer *)topViewController.topViewController;
@@ -58,16 +62,5 @@ URIRegisterAction(UDBLoginAction4, @[@"flutter_closenative"]) {
     }
     [topViewController popViewControllerAnimated:YES];
 }
-
-URIRegisterAction(UDBLoginAction5, @[@"flutter_closeflutter"]) {
-//    flutterpageidx --;
-    NSLog(@"===> flutter_closeflutter flutterpageidx");
-    NSNumber *flutterpageidx = userInfo[@"pageidx"];
-    UINavigationController *topViewController =  (UINavigationController *)[[UIApplication sharedApplication]delegate].window.rootViewController;
-    if (flutterpageidx.intValue == 0) {
-//        topViewController.topViewController.fd_interactivePopDisabled = NO;
-    }
-//    [topViewController popViewControllerAnimated:YES];
-}
-
+ 
 @end

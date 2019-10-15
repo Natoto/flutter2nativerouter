@@ -14,6 +14,8 @@
 #import <OpenGLES/ES1/glext.h>
 //#import "YynativehelperPlugin.h"
 
+//#define SHOWDEBUG 0
+
 static int kGroupPageIdx = 0;
 static __weak YYFlutterViewContainer *lastFlutterCtr = nil;
 
@@ -27,13 +29,13 @@ static __weak YYFlutterViewContainer *lastFlutterCtr = nil;
 @property (nonatomic, strong) UIImageView *snapImageView;
 @property (nonatomic, strong) NSString *routeName;
 //@property (nonatomic, assign) BOOL isloadflutter;
-@property (nonatomic, assign) int groupidx;
-//@property (nonatomic, assign) BOOL needUpdateScreenShot;
-@property (nonatomic, assign) BOOL haveloadflutter;
+@property (nonatomic, assign) int groupidx; 
+@property (nonatomic, assign) BOOL canUpdateSnapshot;
 @end
 
 @implementation UIViewController (snap)
 
+/*
 + (UIImage *)takeSnapshot {
     GLint bufferWidth = 0;
     GLint bufferHeight = 0;
@@ -61,22 +63,16 @@ static __weak YYFlutterViewContainer *lastFlutterCtr = nil;
     UIGraphicsEndImageContext();
     free(data);
     return renderedImage;
-}
+}*/
 
 - (UIImage *)f2n_screenShots:(UIView *)view1
-{
-    //截取整个backview
+{ 
     UIView *view = view1;
     UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0);
     [view.layer performSelectorOnMainThread:@selector(renderInContext:) withObject:(id)UIGraphicsGetCurrentContext() waitUntilDone:YES];
     UIImage *sourceImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    return sourceImage;
-//    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, [UIScreen mainScreen].scale);
-//    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
-//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//    return image;
+    return sourceImage; 
 }
 
 @end
@@ -107,14 +103,12 @@ static __weak YYFlutterViewContainer *lastFlutterCtr = nil;
     YYFlutterViewContainer *ctr = [YYFlutterViewContainer new];
     ctr.routeName = routeName;
     ctr.groupidx = kGroupPageIdx++;
-    if (lastFlutterCtr) {
+    if (lastFlutterCtr && lastFlutterCtr.canUpdateSnapshot) { 
          UIImage *image =  [lastFlutterCtr f2n_screenShots:lastFlutterCtr.view];
          lastFlutterCtr.snapImageView.image = image;
     }
-    lastFlutterCtr = ctr;
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-      [Flutter2nativerouterPlugin pushPageWithName:ctr.routeName uniqidx:ctr.groupidx];
-//    });
+    lastFlutterCtr = ctr; 
+    [Flutter2nativerouterPlugin pushPageWithName:ctr.routeName uniqidx:ctr.groupidx]; 
     return ctr;
 }
 
@@ -124,11 +118,7 @@ static __weak YYFlutterViewContainer *lastFlutterCtr = nil;
         [_engine runWithEntrypoint:nil];
         F2NFlutterViewController *flutterViewController = [[F2NFlutterViewController alloc] initWithEngine:MOSFlutterEngine.sharedInstance.engine nibName:nil bundle:nil];
         [MOSFlutterEngine.sharedInstance registerPlugins:flutterViewController];
-        _flutterViewController = flutterViewController;
-//        NSString *channelName = @"com.girgir.app/native_post";
-//        FlutterEventChannel *evenChannal = [FlutterEventChannel eventChannelWithName:channelName binaryMessenger:self];
-        // 代理
-//        [evenChannal setStreamHandler:MOSFlutterEngine.sharedInstance];
+        _flutterViewController = flutterViewController; 
     }
     return _flutterViewController;
 }
@@ -208,7 +198,7 @@ static UINavigationController *curnavigationctr;
     curnavigationctr = self.navigationController;
     [self snapImageView];
     self.view.backgroundColor = [UIColor colorWithRed:0x16 / 255.0 green:0x17 / 255.0  blue:0x18 / 255.0  alpha:0];
-#if DEBUG
+#if SHOWDEBUG
     self.view.backgroundColor = [UIColor redColor];
 #endif
 }
@@ -235,11 +225,10 @@ static UINavigationController *curnavigationctr;
 {
     [super viewWillAppear:animated];
     [self attachFlutterView];
-//    self.snapImageView.frame = CGRectMake(100, 100, 100, 100);
-//    if (self.haveloadflutter) {
-        [self.view bringSubviewToFront:self.snapImageView];             
-//        self.haveloadflutter = YES;
-//    } 
+    #if SHOWDEBUG
+    self.snapImageView.frame = CGRectMake(100, 100, 100, 100); 
+    #endif
+    [self.view bringSubviewToFront:self.snapImageView];        
     NSLog(@"%s", __func__); 
 }
 
@@ -247,7 +236,8 @@ static UINavigationController *curnavigationctr;
 { 
     [super viewDidAppear:animated]; 
     NSLog(@"%s", __func__);
-    [Flutter2nativerouterPlugin routerPluginEventHandel].eventsBlock([Flutter2nativerouterPlugin createHandleMap:@"updategroupidx" value:self.routeName groupidx:self.groupidx]);
+    self.canUpdateSnapshot = YES;
+//    [Flutter2nativerouterPlugin routerPluginEventHandel].eventsBlock([Flutter2nativerouterPlugin createHandleMap:@"updategroupidx" value:self.routeName groupidx:self.groupidx]);
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.view sendSubviewToBack:self.snapImageView];     
     });
@@ -263,6 +253,7 @@ static UINavigationController *curnavigationctr;
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    self.canUpdateSnapshot = NO;
     NSLog(@"%s", __func__);
 }
 
@@ -273,8 +264,8 @@ static UINavigationController *curnavigationctr;
         [self.view addSubview:_snapImageView];
         [self.view sendSubviewToBack:_snapImageView];
         _snapImageView.frame = self.view.bounds;
-        #if DEBUG
-//        _snapImageView.backgroundColor = [UIColor yellowColor];
+        #if SHOWDEBUG
+        _snapImageView.backgroundColor = [UIColor yellowColor];
         #endif
     }
     return _snapImageView;

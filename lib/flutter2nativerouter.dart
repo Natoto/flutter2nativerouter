@@ -55,10 +55,6 @@ class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
       if (previousRoute is PageRoute && route is PageRoute) {
         _sendScreenView(previousRoute);
       }
-      Flutter2nativerouter.didcloseFlutterURI();
-//    }else{
-//      Flutter2nativerouter.closeNativeURI();
-//    }
   }
 }
 
@@ -166,27 +162,28 @@ class Flutter2nativerouter{
     Map msg = obj;
     String type = msg['type'];
     String value = msg['value'];
-    print("收到消息。。$msg");
+    print("收到原生的方法调用 $type $value");
     if(type == "closeuri")
-    {
-      print(" pop...  $msg");
-      if(pageidxgroups[curgroupidx]>0){
-
-        BuildContext _context = contextMap[getcontextkey(pageidxgroups[curgroupidx], curgroupidx)].context;
-        _poppage(_context,true);
-      }else{
-        int idx = pageidxgroups[curgroupidx];
-        print("当前的idx $idx groupcuridx $curgroupidx");
-//        if(pageidxgroups[curgroupidx]>=0) {
-//          pop(_context, true);
-//        }
-        closeNativeURI({"isForceClose":1});
-      }
-    }
-    else if(type == "dealloccloseuri")
     {
       BuildContext _context = contextMap[getcontextkey(pageidxgroups[curgroupidx], curgroupidx)].context;
       _poppage(_context,true);
+//      if(pageidxgroups[curgroupidx]>0){
+//
+//        BuildContext _context = contextMap[getcontextkey(pageidxgroups[curgroupidx], curgroupidx)].context;
+//        _poppage(_context,true);
+//      }else{
+//        int idx = pageidxgroups[curgroupidx];
+//        print("当前的idx $idx groupcuridx $curgroupidx");
+//        if(pageidxgroups[curgroupidx]>=0) {
+//          pop(_context, true);
+//        }
+//        closeNativeURI({"isForceClose":1});
+//      }
+    }
+    else if(type == "dealloccloseuri")
+    {
+//      BuildContext _context = contextMap[getcontextkey(pageidxgroups[curgroupidx], curgroupidx)].context;
+//      _poppage(_context,true);
     }
     else if( type == 'openuri'){
       _broadcastCallback('openuri',value);
@@ -234,13 +231,6 @@ class Flutter2nativerouter{
 
     pageidxgroups[curgroupidx] = pageidxgroups[curgroupidx] + 1;
     print('flutter push flutter page $params ');
-//    Navigator.push(
-//        context,
-//        MaterialPageRoute(
-//          builder: (context) => widget,
-//        ));
-    print("flutteropenFlutterURI curgroupidx: $curgroupidx ${pageidxgroups[curgroupidx]}");
-    Navigator.pushNamed(context, pagename);
     if(params == null) params = {'animated':0};
 //    params["animated"] = 0;
     final bool res = await _channel.invokeMethod('flutter_openflutter',params);
@@ -256,27 +246,11 @@ class Flutter2nativerouter{
   }
 
  /*关闭flutter页面*/
-  static Future<bool> closeFlutterURI(BuildContext context,[dynamic params]) async {
+  static Future<bool> startcloseFlutterURI(BuildContext context,[dynamic params]) async {
 
-    _poppage(context);
-
-    if(params == null) params = {};
-    params["animated"] = 1;
-    params["pageidx"] = pageidxgroups[curgroupidx];
-    print("closeFlutterURI ..... ");
-    return true;
+      closeNativeURI(params);
   }
 
-// 关闭已经flutter界面
-  static Future<bool> didcloseFlutterURI([dynamic params]) async {
-
-    pageidxgroups[curgroupidx] = pageidxgroups[curgroupidx] - 1;
-    int pageidx =  pageidxgroups[curgroupidx];
-    if(pageidx<0) pageidx = 0;
-    final bool res = await _channel.invokeMethod('flutter_closeflutter',{"groupidx":curgroupidx,"pageidx":pageidx});
-    print("didcloseFlutterURI curgroupidx: $curgroupidx  pageindex: ${pageidxgroups[curgroupidx]}");
-    return res;
-  }
 
   static groupCanPop() {
 

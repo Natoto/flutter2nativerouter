@@ -49,35 +49,24 @@ __weak static Flutter2nativerouterPlugin *_routerplugin;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
+
     if ([@"getPlatformVersion" isEqualToString:call.method]) {
         result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
     } else if ([@"flutter_opennative" isEqualToString:call.method]) {
-//        NSDictionary *parameters = call.arguments;
-//        [[ATHURIRouter sharedInstance] openURI:@"flutter_opennative" parameters:parameters callback:^(BOOL success, id receiver, id assignment) {
-//            result(@(success));
-//        }];
-        result(@0);
+        NSDictionary *parameters = call.arguments;
+        [[ATHURIRouter sharedInstance] openURI:@"flutter_opennative" parameters:parameters callback:^(BOOL success, id receiver, id assignment) {
+            result(@(success));
+        }]; 
     } else if ([@"flutter_openflutter" isEqualToString:call.method]) {
         NSDictionary *parameters = call.arguments;
         [[ATHURIRouter sharedInstance] openURI:@"flutter_openflutter" parameters:parameters callback:^(BOOL success, id receiver, id assignment) {
             result(@(success));
         }];
-    } else if ([@"native_openflutter" isEqualToString:call.method]) {
-//        NSDictionary *parameters = call.arguments;
-//        [[ATHURIRouter sharedInstance] openURI:@"native_openflutter" parameters:parameters callback:^(BOOL success, id receiver, id assignment) {
-//            result(@(success));
-//        }];
-        result(@0);
-    } else if ([@"native_opennative" isEqualToString:call.method]) {
+    }  else if ([@"native_opennative" isEqualToString:call.method]) {
         result(@0);
     } else if ([@"flutter_closenative" isEqualToString:call.method]) {
         NSDictionary *parameters = call.arguments;
         [[ATHURIRouter sharedInstance] openURI:@"flutter_closenative" parameters:parameters callback:^(BOOL success, id receiver, id assignment) {
-            result(@(success));
-        }];
-    } else if ([@"flutter_closeflutter" isEqualToString:call.method]) {
-        NSDictionary *parameters = call.arguments;
-        [[ATHURIRouter sharedInstance] openURI:@"flutter_closeflutter" parameters:parameters callback:^(BOOL success, id receiver, id assignment) {
             result(@(success));
         }];
     } else if ([@"native_closeflutter" isEqualToString:call.method]) {

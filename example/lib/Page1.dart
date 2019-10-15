@@ -48,7 +48,8 @@ class _Page1State extends State<Page1> {
           leading: CupertinoNavigationBarBackButton(
             color: Colors.white,
             onPressed: () {
-              Flutter2nativerouter.closeFlutterURI(context);
+              print("点击了返回按钮");
+              Flutter2nativerouter.startcloseFlutterURI(context);
             },
           )),
       backgroundColor: bgcolor,
@@ -82,7 +83,7 @@ class _Page1State extends State<Page1> {
                 child: Text("close flutter"),
                 onPressed: () {
                   print("click me");
-                  Flutter2nativerouter.closeFlutterURI(context);
+                  Flutter2nativerouter.startcloseFlutterURI(context);
                 })
           ],
         ),
